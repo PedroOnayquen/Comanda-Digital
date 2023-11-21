@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comanda Digital</title>
+</head>
+<body>
+    <h1>Comanda Digital</h1>
+
+    <div>
+        <h2>Itens do Menu</h2>
+        <ul id="itensMenu">
+            <!-- Itens do menu serão exibidos aqui -->
+        </ul>
+        <button onclick="adicionarItensSelecionados()">Adicionar</button>
+    </div>
+
+    <div>
+        <h2>Comanda</h2>
+        <ul id="comanda"></ul>
+        <p>Total: <span id="total">0.00</span> R$</p>
+        <button onclick="limparComanda()">Limpar Comanda</button>
+    </div>
+
+    <script>
+        // Variáveis para armazenar a comanda e o total
+        const comanda = [];
+        let total = 0;
+
+        // Função para adicionar um pedido à comanda
+        function adicionarPedido() {
+            const quantidade = parseInt(document.getElementById("quantidade").value);
+            const itemNome = "Item de Exemplo"; // Nome do item (substitua pelo nome real)
+            const itemPreco = 5.00; // Preço do item (substitua pelo preço real)
+            const valorPedido = itemPreco * quantidade;
+
+            // Atualizar a lista de pedidos na comanda
+            const comandaList = document.getElementById("comanda");
+            const listItem = document.createElement("li");
+            listItem.textContent = `${quantidade}x ${itemNome} - ${valorPedido.toFixed(2)} R$`;
+            comandaList.appendChild(listItem);
+
+            // Atualizar o total
+            total += valorPedido;
+            document.getElementById("total").textContent = total.toFixed(2) + " R$";
+        }
+
+        // Função para limpar a comanda
+        function limparComanda() {
+            comanda.length = 0;
+            total = 0;
+
+            // Limpar a lista de pedidos na comanda
+            const comandaList = document.getElementById("comanda");
+            comandaList.innerHTML = "";
+
+            // Atualizar o total
+            document.getElementById("total").textContent = total.toFixed(2) + " R$";
+        }
+
+        // Função para exibir os itens do menu
+        function exibirItensDoMenu() {
+            const itensMenu = document.getElementById("itensMenu");
+
+            // Substitua os itens de exemplo pelos itens reais do seu menu
+            const itens = [
+                { nome: "Carne de Gado", preco: 5.00 },
+                { nome: "Frango", preco: 4.00 },
+                { nome: "Porco", preco: 4.00 },
+                { nome: "Queijo", preco: 4.00 },
+                { nome: "Calabresa", preco: 4.00 },
+                { nome: "Coração de Frango", preco: 4.00 },
+                { nome: "Carne do Sol", preco: 5.00 }
+            ];
+
+            itens.forEach((item, index) => {
+                // Criar elemento de lista com caixa de seleção e campo de quantidade
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<input type="checkbox" id="selecionado-${index}">
+                    ${item.nome} - ${item.preco.toFixed(2)} R$ 
+                    <input type="number" id="quantidade-${index}" placeholder="Quantidade" min="1" value="1">`;
+                itensMenu.appendChild(listItem);
+            });
+        }
+
+        // Chamar a função para exibir os itens do menu ao carregar a página
+        exibirItensDoMenu();
+
+        // Função para adicionar os itens selecionados à comanda
+        function adicionarItensSelecionados() {
+            // Limpar comanda atual antes de adicionar novos itens
+            limparComanda();
+
+            // Obter todos os itens marcados
+            const itensSelecionados = document.querySelectorAll('input[type="checkbox"]:checked');
+
+            itensSelecionados.forEach((checkbox) => {
+                const itemIndex = parseInt(checkbox.id.split('-')[1]);
+                const quantidadeInput = document.getElementById(`quantidade-${itemIndex}`);
+                const quantidade = parseInt(quantidadeInput.value) || 0; // Se não houver número, usar 0
+
+                if (quantidade > 0) {
+                    const itemNome = itens[itemIndex].nome;
+                    const itemPreco = itens[itemIndex].preco;
+                    adicionarPedido(itemNome, quantidade, itemPreco);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comanda Digital</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+        }
+
+        div {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center; /* Alinha verticalmente */
+        }
+
+        p {
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        /* Estilos adicionados para alinhar os elementos horizontalmente */
+        .item-input {
+            flex-grow: 1;
+        }
+
+        .item-button {
+            margin-left: 10px;
+        }
+
+        /* Estilos para as seções de menu */
+        .menu-section {
+            margin-top: 20px;
+        }
+
+        .menu-section h2 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comanda Digital</h1>
+
+    <div>
+        <h2>Itens do Menu</h2>
+        <ul id="itensMenu">
+            <!-- Itens do menu serão exibidos aqui -->
+        </ul>
+    </div>
+
+    <div class="menu-section">
+        <h2>Guarnições</h2>
+        <ul id="guarnicoesMenu">
+            <!-- Guarnições serão exibidas aqui -->
+        </ul>
+    </div>
+
+    <div class="menu-section">
+        <h2>Sucos</h2>
+        <ul id="sucosMenu">
+            <!-- Sucos serão exibidos aqui -->
+        </ul>
+    </div>
+
+    <div class="menu-section">
+        <h2>Cervejas</h2>
+        <ul id="cervejasMenu">
+            <!-- Cervejas serão exibidas aqui -->
+        </ul>
+    </div>
+
+    <div>
+        <h2>Comanda</h2>
+        <ul id="comanda"></ul>
+        <p>Total: <span id="total">0.00</span> R$</p>
+        <button onclick="limparComanda()">Limpar Comanda</button>
+    </div>
+
+    <script>
+        // Variáveis para armazenar a comanda e o total
+        const comanda = [];
+        let total = 0;
+
+        // Função para adicionar um pedido à comanda
+        function adicionarPedido(itemNome, quantidade, itemPreco) {
+            const valorPedido = itemPreco * quantidade;
+
+            // Adicionar o pedido à comanda
+            comanda.push({ nome: itemNome, quantidade, preco: valorPedido });
+
+            // Atualizar a lista de pedidos na comanda
+            const comandaList = document.getElementById("comanda");
+            const listItem = document.createElement("li");
+            listItem.textContent = `${quantidade}x ${itemNome} - ${valorPedido.toFixed(2)} R$`;
+            comandaList.appendChild(listItem);
+
+            // Atualizar o total
+            total += valorPedido;
+            document.getElementById("total").textContent = total.toFixed(2) + " R$";
+        }
+
+        // Função para limpar a comanda
+        function limparComanda() {
+            comanda.length = 0;
+            total = 0;
+
+            // Limpar a lista de pedidos na comanda
+            const comandaList = document.getElementById("comanda");
+            comandaList.innerHTML = "";
+
+            // Atualizar o total
+            document.getElementById("total").textContent = total.toFixed(2) + " R$";
+        }
+
+        // Função para exibir os itens do menu
+        function exibirItensDoMenu() {
+            const itensMenu = document.getElementById("itensMenu");
+            const guarnicoesMenu = document.getElementById("guarnicoesMenu");
+            const sucosMenu = document.getElementById("sucosMenu");
+            const cervejasMenu = document.getElementById("cervejasMenu");
+
+            // Substitua os itens de exemplo pelos itens reais do seu menu
+            const itens = [
+                { nome: "Carne de Gado", preco: 5.00, categoria: "Prato Principal" },
+                { nome: "Asa de Frango", preco: 5.00, categoria: "Prato Principal" },
+                { nome: "Frango", preco: 4.00, categoria: "Prato Principal" },
+                { nome: "Porco", preco: 4.00, categoria: "Prato Principal" },
+                { nome: "Queijo", preco: 4.00, categoria: "Prato Principal" },
+                { nome: "Calabresa", preco: 4.00, categoria: "Prato Principal" },
+                { nome: "Coração de Frango", preco: 4.00, categoria: "Prato Principal" },
+                { nome: "Carne do Sol", preco: 5.00, categoria: "Prato Principal" },
+                { nome: "Batata Frita", preco: 3.00, categoria: "Guarnição" },
+                { nome: "Salada", preco: 2.50, categoria: "Guarnição" },
+                { nome: "Refrigerante", preco: 2.00, categoria: "Suco" },
+                { nome: "Suco de Laranja", preco: 2.50, categoria: "Suco" },
+                { nome: "Cerveja", preco: 3.50, categoria: "Cerveja" },
+                { nome: "Cerveja Premium", preco: 4.50, categoria: "Cerveja" }
+            ];
+
+            itens.forEach((item, index) => {
+                // Criar elemento de lista com botão "Adicionar" e campo de quantidade
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <div class="item-input">
+                        ${item.nome} - R$ ${item.preco.toFixed(2)} 
+                        <input type="number" id="quantidade-${index}" placeholder="Quantidade" min="1" value="1">
+                    </div>
+                    <button class="item-button" onclick="adicionarPedidoComQuantidade(${index})">Adicionar</button>`;
+
+                // Adicionar o item ao menu apropriado com base na categoria
+                if (item.categoria === "Prato Principal") {
+                    itensMenu.appendChild(listItem);
+                } else if (item.categoria === "Guarnição") {
+                    guarnicoesMenu.appendChild(listItem);
+                } else if (item.categoria === "Suco") {
+                    sucosMenu.appendChild(listItem);
+                } else if (item.categoria === "Cerveja") {
+                    cervejasMenu.appendChild(listItem);
+                }
+            });
+        }
+
+        // Chamar a função para exibir os itens do menu ao carregar a página
+        exibirItensDoMenu();
+
+        // Função para adicionar um pedido à comanda com quantidade especificada
+        function adicionarPedidoComQuantidade(index) {
+            const itemNome = "Item de Exemplo"; // Nome do item (substitua pelo nome real)
+            const quantidadeInput = document.getElementById(`quantidade-${index}`);
+            const quantidade = parseInt(quantidadeInput.value);
+            
+            // Substitua o preço pela variável de preço real do item do menu
+            const itemPreco = [
+                5.00,  // Carne de Gado
+                5.00,  // Asa de Frango
+                4.00,  // Frango
+                4.00,  // Porco
+                4.00,  // Queijo
+                4.00,  // Calabresa
+                4.00,  // Coração de Frango
+                5.00,  // Carne do Sol
+                3.00,  // Batata Frita
+                2.50,  // Salada
+                2.00,  // Refrigerante
+                2.50,  // Suco de Laranja
+                3.50,  // Cerveja
+                4.50   // Cerveja Premium
+            ][index];
+
+            if (quantidade > 0) {
+                adicionarPedido(itemNome, quantidade, itemPreco);
+            }
+        }
+    </script>
+</body>
+</html>
