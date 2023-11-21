@@ -4,84 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comanda Digital</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        h1 {
-            text-align: center;
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-        }
-
-        div {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            margin: 10px 0;
-            display: flex;
-            align-items: center; /* Alinha verticalmente */
-        }
-
-        p {
-            font-weight: bold;
-        }
-
-        input[type="number"] {
-            width: 60px;
-            text-align: center;
-        }
-
-        button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #555;
-        }
-
-        /* Estilos adicionados para alinhar os elementos horizontalmente */
-        .item-input {
-            flex-grow: 1;
-        }
-
-        .item-button {
-            margin-left: 10px;
-        }
-
-        /* Estilos para as seções de menu */
-        .menu-section {
-            margin-top: 20px;
-        }
-
-        .menu-section h2 {
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <h1>Comanda Digital</h1>
@@ -93,76 +16,119 @@
         </ul>
     </div>
 
-    <div class="menu-section">
-        <h2>Guarnições</h2>
-        <ul id="guarnicoesMenu">
-            <!-- Guarnições serão exibidas aqui -->
-        </ul>
-    </div>
-
-    <div class="menu-section">
-        <h2>Sucos</h2>
-        <ul id="sucosMenu">
-            <!-- Sucos serão exibidos aqui -->
-        </ul>
-    </div>
-
-    <div class="menu-section">
-        <h2>Cervejas</h2>
-        <ul id="cervejasMenu">
-            <!-- Cervejas serão exibidas aqui -->
-        </ul>
-    </div>
-
     <div>
         <h2>Comanda</h2>
-        <ul id="comanda"></ul>
+        <ul id="comandaList"></ul>
         <p>Total: <span id="total">0.00</span> R$</p>
         <button onclick="limparComanda()">Limpar Comanda</button>
+
+        <!-- Botão para criar uma nova comanda -->
+        <button onclick="criarNovaComanda()">Nova Comanda</button>
+        
+        <!-- Lista de comandas disponíveis -->
+        <div id="listaDeComandas"></div>
     </div>
 
     <script>
-        // Variáveis para armazenar a comanda e o total
-        const comanda = [];
+        // Variáveis para armazenar as comandas e o total
+        const comandas = [];
+        let comandaAtual = [];
         let total = 0;
 
-        // Função para adicionar um pedido à comanda
+        // Função para criar uma nova comanda
+        function criarNovaComanda() {
+            comandaAtual = [];
+            comandas.push(comandaAtual);
+
+            // Atualiza a lista de comandas disponíveis
+            atualizarListaDeComandas();
+
+            // Limpa a comanda atual
+            limparComanda();
+        }
+
+        // Função para atualizar a lista de comandas disponíveis
+        function atualizarListaDeComandas() {
+            const listaDeComandas = document.getElementById("listaDeComandas");
+            listaDeComandas.innerHTML = "";
+
+            // Adiciona um botão para cada comanda disponível
+            comandas.forEach((comanda, index) => {
+                const botaoComanda = document.createElement("button");
+                botaoComanda.textContent = `Comanda ${index + 1}`;
+                botaoComanda.onclick = () => selecionarComanda(index);
+                listaDeComandas.appendChild(botaoComanda);
+            });
+        }
+
+        // Função para selecionar uma comanda existente
+        function selecionarComanda(index) {
+            comandaAtual = comandas[index];
+
+            // Limpa a lista de pedidos na comanda atual
+            const comandaList = document.getElementById("comandaList");
+            comandaList.innerHTML = "";
+
+            // Preenche a lista de pedidos da comanda selecionada
+            comandaAtual.forEach((pedido, index) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${pedido.quantidade}x ${pedido.nome} - ${pedido.preco.toFixed(2)} R$`;
+                comandaList.appendChild(listItem);
+            });
+
+            // Atualiza o total
+            total = calcularTotal(comandaAtual);
+            document.getElementById("total").textContent = total.toFixed(2) + " R$";
+        }
+
+        // Função para calcular o total da comanda
+        function calcularTotal(comanda) {
+            return comanda.reduce((total, pedido) => total + pedido.preco, 0);
+        }
+
+        // Função para adicionar um pedido à comanda atual
         function adicionarPedido(itemNome, quantidade, itemPreco) {
             const valorPedido = itemPreco * quantidade;
 
-            // Adicionar o pedido à comanda
-            comanda.push({ nome: itemNome, quantidade, preco: valorPedido });
+            // Adicionar o pedido à comanda atual
+            comandaAtual.push({ nome: itemNome, quantidade, preco: valorPedido });
 
-            // Atualizar a lista de pedidos na comanda
-            const comandaList = document.getElementById("comanda");
-            const listItem = document.createElement("li");
-            listItem.textContent = `${quantidade}x ${itemNome} - ${valorPedido.toFixed(2)} R$`;
-            comandaList.appendChild(listItem);
+            // Atualizar a lista de pedidos na comanda atual
+            atualizarComanda();
 
             // Atualizar o total
             total += valorPedido;
             document.getElementById("total").textContent = total.toFixed(2) + " R$";
         }
 
-        // Função para limpar a comanda
-        function limparComanda() {
-            comanda.length = 0;
-            total = 0;
-
-            // Limpar a lista de pedidos na comanda
-            const comandaList = document.getElementById("comanda");
+        // Função para atualizar a lista de pedidos na comanda atual
+        function atualizarComanda() {
+            const comandaList = document.getElementById("comandaList");
             comandaList.innerHTML = "";
 
+            // Percorrer a lista de pedidos na comanda atual
+            comandaAtual.forEach((pedido, index) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${pedido.quantidade}x ${pedido.nome} - ${pedido.preco.toFixed(2)} R$`;
+                comandaList.appendChild(listItem);
+            });
+        }
+
+        // Função para limpar a comanda
+        function limparComanda() {
+            comandaAtual.length = 0;
+
+            // Limpar a lista de pedidos na comanda atual
+            atualizarComanda();
+
             // Atualizar o total
+            total = 0;
             document.getElementById("total").textContent = total.toFixed(2) + " R$";
         }
 
         // Função para exibir os itens do menu
         function exibirItensDoMenu() {
             const itensMenu = document.getElementById("itensMenu");
-            const guarnicoesMenu = document.getElementById("guarnicoesMenu");
-            const sucosMenu = document.getElementById("sucosMenu");
-            const cervejasMenu = document.getElementById("cervejasMenu");
 
             // Substitua os itens de exemplo pelos itens reais do seu menu
             const itens = [
@@ -195,46 +161,66 @@
                 // Adicionar o item ao menu apropriado com base na categoria
                 if (item.categoria === "Prato Principal") {
                     itensMenu.appendChild(listItem);
-                } else if (item.categoria === "Guarnição") {
-                    guarnicoesMenu.appendChild(listItem);
-                } else if (item.categoria === "Suco") {
-                    sucosMenu.appendChild(listItem);
-                } else if (item.categoria === "Cerveja") {
-                    cervejasMenu.appendChild(listItem);
                 }
             });
         }
 
-        // Chamar a função para exibir os itens do menu ao carregar a página
+        // Chame a função para exibir os itens do menu ao carregar a página
         exibirItensDoMenu();
 
         // Função para adicionar um pedido à comanda com quantidade especificada
         function adicionarPedidoComQuantidade(index) {
-            const itemNome = "Item de Exemplo"; // Nome do item (substitua pelo nome real)
+            const itemNome = obterNomeDoItem(index);
             const quantidadeInput = document.getElementById(`quantidade-${index}`);
             const quantidade = parseInt(quantidadeInput.value);
-            
-            // Substitua o preço pela variável de preço real do item do menu
-            const itemPreco = [
-                5.00,  // Carne de Gado
-                5.00,  // Asa de Frango
-                4.00,  // Frango
-                4.00,  // Porco
-                4.00,  // Queijo
-                4.00,  // Calabresa
-                4.00,  // Coração de Frango
-                5.00,  // Carne do Sol
-                3.00,  // Batata Frita
-                2.50,  // Salada
-                2.00,  // Refrigerante
-                2.50,  // Suco de Laranja
-                3.50,  // Cerveja
-                4.50   // Cerveja Premium
-            ][index];
+
+            const itemPreco = obterPrecoDoItem(index);
 
             if (quantidade > 0) {
                 adicionarPedido(itemNome, quantidade, itemPreco);
             }
+        }
+
+        // Função para obter o nome do item com base no índice
+        function obterNomeDoItem(index) {
+            const nomes = [
+                "Carne de Gado",
+                "Asa de Frango",
+                "Frango",
+                "Porco",
+                "Queijo",
+                "Calabresa",
+                "Coração de Frango",
+                "Carne do Sol",
+                "Batata Frita",
+                "Salada",
+                "Refrigerante",
+                "Suco de Laranja",
+                "Cerveja",
+                "Cerveja Premium"
+            ];
+            return nomes[index];
+        }
+
+        // Função para obter o preço do item com base no índice
+        function obterPrecoDoItem(index) {
+            const precos = [
+                5.00,
+                5.00,
+                4.00,
+                4.00,
+                4.00,
+                4.00,
+                4.00,
+                5.00,
+                3.00,
+                2.50,
+                2.00,
+                2.50,
+                3.50,
+                4.50
+            ];
+            return precos[index];
         }
     </script>
 </body>
