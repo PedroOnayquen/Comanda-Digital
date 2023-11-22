@@ -1,36 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comanda Digital</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
-    <h1>Comanda Digital</h1>
-
-    <div>
-        <h2>Itens do Menu</h2>
-        <ul id="itensMenu">
-            <!-- Itens do menu serão exibidos aqui -->
-        </ul>
-    </div>
-
-    <div>
-        <h2>Comanda</h2>
-        <ul id="comandaList"></ul>
-        <p>Total: <span id="total">0.00</span></p>
-        <button onclick="limparComanda()">Limpar Comanda</button>
-
-        <!-- Botão para criar uma nova comanda -->
-        <button onclick="criarNovaComanda()">Nova Comanda</button>
-        
-        <!-- Lista de comandas disponíveis -->
-        <div id="listaDeComandas"></div>
-    </div>
-
-    <script>
-        // Variáveis para armazenar as comandas e o total
+// Variáveis para armazenar as comandas e o total
         const comandas = [];
         let comandaAtual = [];
         let total = 0;
@@ -72,7 +40,7 @@
             // Preenche a lista de pedidos da comanda selecionada
             comandaAtual.forEach((pedido, index) => {
                 const listItem = document.createElement("li");
-                listItem.textContent = `${pedido.quantidade}x ${pedido.nome} - R$ ${pedido.preco.toFixed(2)}`;
+                listItem.textContent = `${pedido.quantidade} ${pedido.nome} - R$ ${pedido.preco.toFixed(2)}`;
                 comandaList.appendChild(listItem);
             });
 
@@ -109,11 +77,10 @@
             // Percorrer a lista de pedidos na comanda atual
             comandaAtual.forEach((pedido, index) => {
                 const listItem = document.createElement("li");
-                listItem.textContent = ` ${pedido.quantidade} x ${pedido.nome} - R$ ${pedido.preco.toFixed(2)}`;
+                listItem.textContent = `${pedido.quantidade} ${pedido.nome} - R$ ${pedido.preco.toFixed(2)} `;
                 comandaList.appendChild(listItem);
             });
         }
-
         // Função para limpar a comanda
         function limparComanda() {
             comandaAtual.length = 0;
@@ -181,8 +148,8 @@
                 { nome: "Quinta do Morgado", preco: 8.00, categoria: "Doses" },
                 { nome: "Vinho", preco: 8.00, categoria: "Doses" },
                 { nome: "Ypioca Branca", preco: 2.00, categoria: "Doses" },
-                { nome: "Copo Ypioca Branca", preco: 2.00, categoria: "Doses" },
-                { nome: "Ypioca Amarela", preco: 6.00, categoria: "Doses" },
+                { nome: "Copo Ypioca Branca", preco: 6.00, categoria: "Doses" },
+                { nome: "Ypioca Amarela", preco: 2.00, categoria: "Doses" },
                 { nome: "Copo Ypioca Amarela", preco: 6.00, categoria: "Doses" },
             ];
 
@@ -206,7 +173,7 @@
                     const listItem = document.createElement("li");
                     listItem.innerHTML = `
                         <div class="item-input">
-                            ${item.nome} - x ${item.preco.toFixed(2)} 
+                            ${item.nome} -  ${item.preco.toFixed(2)} 
                             <input type="number" id="quantidade-${item.nome}-${index}" placeholder="Quantidade" min="1" value="1">
                         </div>
                         <button class="item-button" onclick="adicionarPedidoComQuantidade('${item.nome}', ${index}, '${categoria}')">Adicionar</button>`;
@@ -283,8 +250,8 @@
                 { nome: "Quinta do Morgado", preco: 8.00, categoria: "Doses" },
                 { nome: "Vinho", preco: 8.00, categoria: "Doses" },
                 { nome: "Ypioca Branca", preco: 2.00, categoria: "Doses" },
-                { nome: "Copo Ypioca Branca", preco: 2.00, categoria: "Doses" },
-                { nome: "Ypioca Amarela", preco: 6.00, categoria: "Doses" },
+                { nome: "Copo Ypioca Branca", preco: 6.00, categoria: "Doses" },
+                { nome: "Ypioca Amarela", preco: 2.00, categoria: "Doses" },
                 { nome: "Copo Ypioca Amarela", preco: 6.00, categoria: "Doses" },
             ];
 
@@ -296,6 +263,3 @@
                 return 0;
             }
         }
-    </script>
-</body>
-</html>
