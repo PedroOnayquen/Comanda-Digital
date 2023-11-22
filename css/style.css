@@ -1,3 +1,25 @@
+/* Estilos para telas menores */
+@media screen and (max-width: 600px) {
+    div {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    /* Ajuste o tamanho do input para dispositivos menores, se necessário */
+    input[type="number"] {
+        width: 40px;
+    }
+
+    /* Ajuste o tamanho do texto nas listas */
+    li {
+        font-size: 14px;
+    }
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
