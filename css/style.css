@@ -82,10 +82,13 @@ button:hover {
 /* Estilos adicionados para alinhar os elementos horizontalmente */
 .item-input {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
 }
 
 .item-button {
     margin-left: 10px;
+    padding: 5px 10px;
 }
 
 /* Estilos para a lista de comanda */
@@ -96,4 +99,28 @@ button:hover {
 
 #comandaList li {
     margin: 10px 0;
+}
+
+/* Estilos para o formulário de adição de pedidos */
+.item-form {
+    display: flex;
+    align-items: center;
+}
+
+.item-input input[type="number"] {
+    width: 40px;
+    margin-right: 10px;
+}
+
+/* Estilize o botão de adicionar pedido */
+#adicionarPedido {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#adicionarPedido:hover {
+    background-color: #45a049;
 }
