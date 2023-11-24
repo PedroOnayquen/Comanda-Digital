@@ -66,27 +66,6 @@ function adicionarPedido(itemNome, quantidade, itemPreco) {
     atualizarTotal();
 }
 
-// ... (código anterior)
-
-// Função para incrementar a quantidade de um pedido na comanda atual
-function incrementarQuantidade(index) {
-    comandaAtual[index].quantidade++;
-    atualizarComanda();
-    atualizarTotal();
-}
-
-// Função para decrementar a quantidade de um pedido na comanda atual
-function decrementarQuantidade(index) {
-    if (comandaAtual[index].quantidade > 1) {
-        comandaAtual[index].quantidade--;
-    } else {
-        // Remover o item se a quantidade for 1
-        comandaAtual.splice(index, 1);
-    }
-    atualizarComanda();
-    atualizarTotal();
-}
-
 
 // Função para criar um elemento de pedido na lista da comanda
 function criarElementoPedido(pedido, index) {
@@ -215,7 +194,7 @@ function exibirItensDoMenu() {
     });
 }
 
-// Chame a função para exibir os itens do menu ao carregar a página
+// Chama a função para exibir os itens do menu ao carregar a página
 exibirItensDoMenu();
 
 // Função para adicionar um pedido à comanda com quantidade especificada
@@ -229,6 +208,8 @@ function adicionarPedidoComQuantidade(itemNome, index, categoria) {
         adicionarPedido(itemNome, quantidade, itemPreco);
     }
 }
+
+
 
 // Função para obter o preço do item com base no nome e categoria
 function obterPrecoDoItem(itemNome, categoria) {
@@ -290,8 +271,7 @@ function obterPrecoDoItem(itemNome, categoria) {
         { nome: "Copo Dreher", preco: 6.00, categoria: "Doses" },
     ];
 
-    const itemEncontrado = itens.find(item => item.nome === itemNome && item.categoria === categoria);
-
+    const itemEncontrado = itens.find(item => item.nome === itemNome)
     if (itemEncontrado) {
         return itemEncontrado.preco;
     } else {
@@ -299,14 +279,46 @@ function obterPrecoDoItem(itemNome, categoria) {
     }
 }
 
-// Função para atualizar o total
-function atualizarTotal() {
-    total = calcularTotal(comandaAtual);
-    document.getElementById("total").textContent = "R$ " + total.toFixed(2);
+// Função para calcular o preço de um item com base na quantidade
+function calcularPreco(itemNome, quantidade) {
+    const itemPreco = obterPrecoDoItem(itemNome);
+    return itemPreco * quantidade;
 }
+
+// Função para incrementar a quantidade de um pedido na comanda atual
+function incrementarQuantidade(index) {
+    comandaAtual[index].quantidade++;
+    comandaAtual[index].preco = calcularPreco(comandaAtual[index].nome, comandaAtual[index].quantidade);
+    atualizarComanda();
+    atualizarTotal();
+}
+
+// Função para decrementar a quantidade de um pedido na comanda atual
+function decrementarQuantidade(index) {
+    if (comandaAtual[index].quantidade > 1) {
+        comandaAtual[index].quantidade--;
+        comandaAtual[index].preco = calcularPreco(comandaAtual[index].nome, comandaAtual[index].quantidade);
+    } else {
+        // Remover o item se a quantidade for 1
+        comandaAtual.splice(index, 1);
+    }
+    atualizarComanda();
+    atualizarTotal();
+}
+
+
 
 // Função para calcular o preço de um item com base na quantidade
 function calcularPreco(itemNome, quantidade) {
     const itemPreco = obterPrecoDoItem(itemNome);
     return itemPreco * quantidade;
 }
+
+
+
+// Função para atualizar o total
+function atualizarTotal() {
+    total = calcularTotal(comandaAtual);
+    document.getElementById("total").textContent = "R$ " + total.toFixed(2);
+}
+
