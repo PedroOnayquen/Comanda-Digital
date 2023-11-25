@@ -51,6 +51,28 @@ function selecionarComanda(index) {
 function calcularTotal(comanda) {
     return comanda.reduce((total, pedido) => total + pedido.preco, 0);
 }
+//////////////////////////////////////////////
+
+//Integração com o servidor usando AJAX
+function enviarComandaParaServidor() {
+    const xhr = new XMLHttpRequest();
+    const url = "https://pedroonayquen.github.io/Comanda-Digital/"; // Substitua pela URL correta do seu servidor
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Prepara os dados para enviar ao servidor
+    const dadosParaEnviar = JSON.stringify({ comanda: comandaAtual });
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Limpa a comanda após o sucesso
+            limparComanda();
+        }
+    };
+
+    // Envia os dados para o servidor
+    xhr.send(dadosParaEnviar);
+}
 
 // Função para adicionar um pedido à comanda atual
 function adicionarPedido(itemNome, quantidade, itemPreco) {
@@ -64,8 +86,12 @@ function adicionarPedido(itemNome, quantidade, itemPreco) {
 
     // Atualizar o total
     atualizarTotal();
+
+    // Enviar a comanda para o servidor
+    enviarComandaParaServidor();
 }
 
+////////////////////////////////////////
 
 // Função para criar um elemento de pedido na lista da comanda
 function criarElementoPedido(pedido, index) {
