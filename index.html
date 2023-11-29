@@ -6,13 +6,17 @@
     <title>Comanda Digital</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
-<body>
+<body background="img/fundo.jpg">
+
+    
+
     <h1>Comanda Digital</h1>
 
     <div class="menu-container">
         <h2>Itens do Menu</h2>
         <ul id="itensMenu">
-            <!-- Itens do menu serão exibidos aqui -->
+            <!-- Cada categoria terá uma classe "categoria" e um ID único -->
+        
         </ul>
     </div>
 
@@ -24,11 +28,14 @@
 
         <!-- Botão para criar uma nova comanda -->
         <button onclick="criarNovaComanda()">Nova Comanda</button>
+        
 
         <div id="comandas">
             <h2>Comandas Disponíveis</h2>
             <div id="listaDeComandas"></div>
         </div>
+
+    </div>    
 
 
     <script src="Js/comanda.js"></script>

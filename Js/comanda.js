@@ -1,5 +1,5 @@
 // Variáveis para armazenar as comandas e o total
-const comandas = [];
+let comandas = [];
 let comandaAtual = [];
 let total = 0;
 
@@ -15,6 +15,16 @@ function criarNovaComanda() {
     limparComanda();
 }
 
+// Função para criar várias comandas iniciais
+function criarComandasIniciais(numeroComandas) {
+    for (let i = 0; i < numeroComandas; i++) {
+        criarNovaComanda();
+    }
+}
+
+// Chama a função para criar 20 comandas iniciais
+criarComandasIniciais(20);
+
 // Função para atualizar a lista de comandas disponíveis
 function atualizarListaDeComandas() {
     const listaDeComandas = document.getElementById("listaDeComandas");
@@ -23,8 +33,9 @@ function atualizarListaDeComandas() {
     // Adiciona um botão para cada comanda disponível
     comandas.forEach((comanda, index) => {
         const botaoComanda = document.createElement("button");
-        botaoComanda.textContent = `Comanda ${index + 1}`;
+        botaoComanda.textContent = `Mesa ${index + 1}`;
         botaoComanda.onclick = () => selecionarComanda(index);
+        botaoComanda.classList.add("mesas");  // Adiciona a classe "mesas"
         listaDeComandas.appendChild(botaoComanda);
     });
 }
@@ -45,6 +56,9 @@ function selecionarComanda(index) {
 
     // Atualiza o total
     atualizarTotal();
+    // Salvar os dados após adicionar um pedido
+    salvarDados();
+    
 }
 
 // Função para calcular o total da comanda
@@ -53,26 +67,8 @@ function calcularTotal(comanda) {
 }
 //////////////////////////////////////////////
 
-//Integração com o servidor usando AJAX
-function enviarComandaParaServidor() {
-    const xhr = new XMLHttpRequest();
-    const url = "https://pedroonayquen.github.io/Comanda-Digital/"; // Substitua pela URL correta do seu servidor
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
 
-    // Prepara os dados para enviar ao servidor
-    const dadosParaEnviar = JSON.stringify({ comanda: comandaAtual });
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // Limpa a comanda após o sucesso
-            limparComanda();
-        }
-    };
-
-    // Envia os dados para o servidor
-    xhr.send(dadosParaEnviar);
-}
 
 // Função para adicionar um pedido à comanda atual
 function adicionarPedido(itemNome, quantidade, itemPreco) {
@@ -80,16 +76,18 @@ function adicionarPedido(itemNome, quantidade, itemPreco) {
 
     // Adicionar o pedido à comanda atual
     comandaAtual.push({ nome: itemNome, quantidade, preco: valorPedido });
-
+    console.log('Comanda Atual:', comandaAtual);
     // Atualizar a lista de pedidos na comanda atual
     atualizarComanda();
 
     // Atualizar o total
     atualizarTotal();
+    // Salvar os dados após adicionar um pedido
+    salvarDados();
 
-    // Enviar a comanda para o servidor
-    enviarComandaParaServidor();
 }
+
+
 
 ////////////////////////////////////////
 
@@ -129,6 +127,9 @@ function limparComanda() {
     // Atualizar o total
     total = 0;
     document.getElementById("total").textContent = "R$ " + total.toFixed(2);
+
+    // Salvar os dados após limpar a comanda
+    salvarDados();
 }
 
 function exibirItensDoMenu() {
@@ -171,6 +172,7 @@ function exibirItensDoMenu() {
             { nome: "Abacaxi", preco: 3.00, categoria: "Sucos" },
             { nome: "Graviola", preco: 4.00, categoria: "Sucos" },
             { nome: "Limão", preco: 4.00, categoria: "Sucos" },
+            { nome: "Jarra", preco: 10.00, categoria: "Sucos" },
             { nome: "Skol 300ml", preco: 4.00, categoria: "Cervejas" },
             { nome: "Bohemia 300ml", preco: 4.00, categoria: "Cervejas" },
             { nome: "Bohemia 600ml", preco: 9.00, categoria: "Cervejas" },
@@ -189,39 +191,66 @@ function exibirItensDoMenu() {
             { nome: "Ypioca Amarela", preco: 2.00, categoria: "Doses" },
             { nome: "Copo Ypioca Amarela", preco: 6.00, categoria: "Doses" },
             { nome: "Copo Dreher", preco: 6.00, categoria: "Doses" },
+            { nome: "Caipirinha", preco: 8.00, categoria: "Doses" },
         ];
-    
-    const categorias = [
-        "Espetos",
-        "Guarnições",
-        "Refrigerantes",
-        "Sucos",
-        "Cervejas",
-        "Doses"
-    ];
 
-    categorias.forEach(categoria => {
-        const categoriaHeader = document.createElement("h3");
-        categoriaHeader.textContent = categoria;
-        itensMenu.appendChild(categoriaHeader);
-
-        const categoriaItens = itens.filter(item => item.categoria === categoria);
-        categoriaItens.forEach((item, index) => {
-            // Criar elemento de lista com botão "Adicionar" e campo de quantidade
+        const categorias = [...new Set(itens.map(item => item.categoria))];
+        categorias.forEach(categoria => {
+            const categoriaHeader = document.createElement("h3");
+            categoriaHeader.textContent = categoria;
+            categoriaHeader.classList.add("categoria");  
+            categoriaHeader.onclick = () => toggleCategoria(categoria);
+            itensMenu.appendChild(categoriaHeader);
+        
+            const categoriaItens = itens.filter(item => item.categoria === categoria);
+        
+            const listaItensCategoria = document.createElement("ul");
+            listaItensCategoria.id = `itens-${categoria}`;
+            listaItensCategoria.classList.add("itens");
+        
+            // Adicione a classe "escondido" à lista na criação
+            listaItensCategoria.classList.add("escondido");
+        
+            categoriaItens.forEach((item, index) => {
             const listItem = document.createElement("li");
             listItem.innerHTML = `
                 <div class="item-input">
                     ${item.nome} -  ${item.preco.toFixed(2)} 
                     <input type="number" id="quantidade-${item.nome}-${index}" placeholder="Quantidade" min="1" value="1">
                 </div>
-                <button class="item-button" onclick="adicionarPedidoComQuantidade('${item.nome}', ${index}, '${categoria}')">Adicionar</button>`;
-            itensMenu.appendChild(listItem);
+                <button class="item-button" data-nome="${item.nome}" data-index="${index}" data-categoria="${categoria}">+</button>`;
+
+            listItem.querySelector('.item-button').addEventListener('click', function () {
+                const itemNome = this.getAttribute('data-nome');
+                const index = parseInt(this.getAttribute('data-index'));
+                const categoria = this.getAttribute('data-categoria');
+                adicionarPedidoComQuantidade(itemNome, index, categoria);
+            });
+
+            listaItensCategoria.appendChild(listItem);
         });
+
+        itensMenu.appendChild(listaItensCategoria);
     });
 }
 
-// Chama a função para exibir os itens do menu ao carregar a página
-exibirItensDoMenu();
+
+
+// Função para alternar a visibilidade dos itens de uma categoria
+function toggleCategoria(categoria) {
+    const listaItensCategoria = document.getElementById(`itens-${categoria}`);
+    if (listaItensCategoria.classList.contains("escondido")) {
+        console.log(`Removendo escondido de itens-${categoria}`);
+        listaItensCategoria.classList.remove("escondido");
+    } else {
+        console.log(`Adicionando escondido a itens-${categoria}`);
+        listaItensCategoria.classList.add("escondido");
+        
+    }
+}
+
+
+
 
 // Função para adicionar um pedido à comanda com quantidade especificada
 function adicionarPedidoComQuantidade(itemNome, index, categoria) {
@@ -277,6 +306,7 @@ function obterPrecoDoItem(itemNome, categoria) {
         { nome: "Abacaxi", preco: 3.00, categoria: "Sucos" },
         { nome: "Graviola", preco: 4.00, categoria: "Sucos" },
         { nome: "Limão", preco: 4.00, categoria: "Sucos" },
+        { nome: "Jarra", preco: 10.00, categoria: "Sucos" },
         { nome: "Skol 300ml", preco: 4.00, categoria: "Cervejas" },
         { nome: "Bohemia 300ml", preco: 4.00, categoria: "Cervejas" },
         { nome: "Bohemia 600ml", preco: 9.00, categoria: "Cervejas" },
@@ -295,6 +325,7 @@ function obterPrecoDoItem(itemNome, categoria) {
         { nome: "Ypioca Amarela", preco: 2.00, categoria: "Doses" },
         { nome: "Copo Ypioca Amarela", preco: 6.00, categoria: "Doses" },
         { nome: "Copo Dreher", preco: 6.00, categoria: "Doses" },
+        { nome: "Caipirinha", preco: 8.00, categoria: "Doses" },
     ];
 
     const itemEncontrado = itens.find(item => item.nome === itemNome)
@@ -305,11 +336,6 @@ function obterPrecoDoItem(itemNome, categoria) {
     }
 }
 
-// Função para calcular o preço de um item com base na quantidade
-function calcularPreco(itemNome, quantidade) {
-    const itemPreco = obterPrecoDoItem(itemNome);
-    return itemPreco * quantidade;
-}
 
 // Função para incrementar a quantidade de um pedido na comanda atual
 function incrementarQuantidade(index) {
@@ -347,4 +373,36 @@ function atualizarTotal() {
     total = calcularTotal(comandaAtual);
     document.getElementById("total").textContent = "R$ " + total.toFixed(2);
 }
+
+// Função para salvar os dados no Local Storage
+function salvarDados() {
+    try {
+        localStorage.setItem("comandas", JSON.stringify(comandas));
+        console.log("Dados salvos com sucesso.");
+    } catch (error) {
+        console.error("Erro ao salvar dados:", error);
+    }
+}
+
+// Função para carregar os dados do Local Storage
+function carregarDados() {
+    try {
+        const dadosSalvos = localStorage.getItem("comandas");
+
+        if (dadosSalvos) {
+            comandas = JSON.parse(dadosSalvos);
+            atualizarListaDeComandas();
+            console.log("Dados carregados com sucesso.");
+        }
+    } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+    }
+}
+
+carregarDados();
+
+// Chama a função para exibir os itens do menu ao carregar a página
+exibirItensDoMenu();
+
+
 
