@@ -38,6 +38,7 @@ function atualizarListaDeComandas() {
         botaoComanda.classList.add("mesas");  // Adiciona a classe "mesas"
         listaDeComandas.appendChild(botaoComanda);
     });
+    selecionarComanda(0);
 }
 
 // Função para selecionar uma comanda existente
@@ -56,10 +57,10 @@ function selecionarComanda(index) {
 
     // Atualiza o total
     atualizarTotal();
-    // Salvar os dados após adicionar um pedido
-    salvarDados();
     
 }
+
+
 
 // Função para calcular o total da comanda
 function calcularTotal(comanda) {
@@ -82,8 +83,6 @@ function adicionarPedido(itemNome, quantidade, itemPreco) {
 
     // Atualizar o total
     atualizarTotal();
-    // Salvar os dados após adicionar um pedido
-    salvarDados();
 
 }
 
@@ -127,9 +126,6 @@ function limparComanda() {
     // Atualizar o total
     total = 0;
     document.getElementById("total").textContent = "R$ " + total.toFixed(2);
-
-    // Salvar os dados após limpar a comanda
-    salvarDados();
 }
 
 function exibirItensDoMenu() {
@@ -374,32 +370,6 @@ function atualizarTotal() {
     document.getElementById("total").textContent = "R$ " + total.toFixed(2);
 }
 
-// Função para salvar os dados no Local Storage
-function salvarDados() {
-    try {
-        localStorage.setItem("comandas", JSON.stringify(comandas));
-        console.log("Dados salvos com sucesso.");
-    } catch (error) {
-        console.error("Erro ao salvar dados:", error);
-    }
-}
-
-// Função para carregar os dados do Local Storage
-function carregarDados() {
-    try {
-        const dadosSalvos = localStorage.getItem("comandas");
-
-        if (dadosSalvos) {
-            comandas = JSON.parse(dadosSalvos);
-            atualizarListaDeComandas();
-            console.log("Dados carregados com sucesso.");
-        }
-    } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-    }
-}
-
-carregarDados();
 
 // Chama a função para exibir os itens do menu ao carregar a página
 exibirItensDoMenu();
