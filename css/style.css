@@ -77,9 +77,14 @@ button {
     color: #fff;
     border-radius: 3px;
     padding: 10px 10px;
-    margin: 5px;
     cursor: pointer;
-    margin-right: 10px; /* Adicionado margem à direita */
+}
+
+#listaDeComandas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 button.mesas {
@@ -90,7 +95,6 @@ button.mesas {
     min-width: 100px;
     margin: 5px;
     cursor: pointer;
-    margin-right: 10px; /* Adicionado margem à direita */
 }
 
 button.mesas:hover,
@@ -112,7 +116,7 @@ button:hover {
 }
 
 .item-button {
-    margin-left: 30px;
+    margin-left: 10px;
     padding: 15px 15px;
 }
 
