@@ -158,9 +158,6 @@ function exibirItensDoMenu() {
             { nome: "Fresh Limão", preco: 5.00, categoria: "Refrigerantes" },
             { nome: "Sprite", preco: 5.00, categoria: "Refrigerantes" },
             { nome: "Red Bull", preco: 12.00, categoria: "Refrigerantes" },
-            { nome: "Água 1,5L", preco: 4.00, categoria: "Refrigerantes" },
-            { nome: "Água com Gás", preco: 3.00, categoria: "Refrigerantes" },
-            { nome: "Água sem Gás", preco: 1.00, categoria: "Refrigerantes" },
             { nome: "Cajuína", preco: 8.00, categoria: "Refrigerantes" },
             { nome: "Maracujá", preco: 3.00, categoria: "Sucos" },
             { nome: "Cajá", preco: 3.00, categoria: "Sucos" },
@@ -187,7 +184,11 @@ function exibirItensDoMenu() {
             { nome: "Ypioca Amarela", preco: 2.00, categoria: "Doses" },
             { nome: "Copo Ypioca Amarela", preco: 6.00, categoria: "Doses" },
             { nome: "Copo Dreher", preco: 6.00, categoria: "Doses" },
-            { nome: "Caipirinha", preco: 8.00, categoria: "Doses" },
+            { nome: "Água sem Gás", preco: 1.00, categoria: "Outras Bebidas" },
+            { nome: "Água com Gás", preco: 3.00, categoria: "Outras Bebidas" },
+            { nome: "Água de coco", preco: 3.00, categoria: "Outras Bebidas" },
+            { nome: "Água 1,5L", preco: 4.00, categoria: "Outras Bebidas" },
+            { nome: "Caipirinha", preco: 8.00, categoria: "Outras Bebidas" },
         ];
 
         const categorias = [...new Set(itens.map(item => item.categoria))];
@@ -292,9 +293,6 @@ function obterPrecoDoItem(itemNome, categoria) {
         { nome: "Fresh Limão", preco: 5.00, categoria: "Refrigerantes" },
         { nome: "Sprite", preco: 5.00, categoria: "Refrigerantes" },
         { nome: "Red Bull", preco: 12.00, categoria: "Refrigerantes" },
-        { nome: "Água 1,5L", preco: 4.00, categoria: "Refrigerantes" },
-        { nome: "Água com Gás", preco: 3.00, categoria: "Refrigerantes" },
-        { nome: "Água sem Gás", preco: 1.00, categoria: "Refrigerantes" },
         { nome: "Cajuína", preco: 8.00, categoria: "Refrigerantes" },
         { nome: "Maracujá", preco: 3.00, categoria: "Sucos" },
         { nome: "Cajá", preco: 3.00, categoria: "Sucos" },
@@ -321,7 +319,11 @@ function obterPrecoDoItem(itemNome, categoria) {
         { nome: "Ypioca Amarela", preco: 2.00, categoria: "Doses" },
         { nome: "Copo Ypioca Amarela", preco: 6.00, categoria: "Doses" },
         { nome: "Copo Dreher", preco: 6.00, categoria: "Doses" },
-        { nome: "Caipirinha", preco: 8.00, categoria: "Doses" },
+        { nome: "Água sem Gás", preco: 1.00, categoria: "Outras Bebidas" },
+        { nome: "Água com Gás", preco: 3.00, categoria: "Outras Bebidas" },
+        { nome: "Água de coco", preco: 3.00, categoria: "Outras Bebidas" },
+        { nome: "Água 1,5L", preco: 4.00, categoria: "Outras Bebidas" },
+        { nome: "Caipirinha", preco: 8.00, categoria: "Outras Bebidas" },
     ];
 
     const itemEncontrado = itens.find(item => item.nome === itemNome)
