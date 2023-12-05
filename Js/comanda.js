@@ -335,6 +335,7 @@ function obterPrecoDoItem(itemNome, categoria) {
 }
 
 
+
 // Função para incrementar a quantidade de um pedido na comanda atual
 function incrementarQuantidade(index) {
     comandaAtual[index].quantidade++;

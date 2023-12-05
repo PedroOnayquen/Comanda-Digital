@@ -79,6 +79,32 @@ button {
     padding: 10px 10px;
     cursor: pointer;
 }
+/* Estilize o botão de adicionar comanda */
+#adicionarComanda {
+    background-color: #4CAF50; /* Verde */
+    color: #fff;
+    border: none;
+    margin-left: 20px;
+    padding: 8px 13px;
+    cursor: pointer;
+}
+
+#adicionarComanda:hover {
+    background-color: #45a049; /* Tom mais escuro de verde ao passar o mouse */
+}
+
+/* Estilize o botão de limpar comanda */
+#limparComanda {
+    background-color: #FF0000; /* Vermelho */
+    color: #fff;
+    border: none;
+    padding: 8px 13px;
+    cursor: pointer;
+}
+
+#limparComanda:hover {
+    background-color: #990000; /* Tom mais escuro de vermelho ao passar o mouse */
+}
 
 #listaDeComandas {
     display: flex;
